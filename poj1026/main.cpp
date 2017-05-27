@@ -17,19 +17,14 @@ int main()
 {
     cin.tie(0);
     cin.sync_with_stdio(false);
-    while(true)
+    while(cin >> n && n)
     {
-        cin >> n;
-        if(!n)
-            break;
-
         for(int i = 1;i <= n;i++)
             cin >> replacement[i];
+
         int kk;
-        while(cin >> kk)
+        while(cin >> kk && kk)
         {
-            if(!kk)
-                break;
             memset(krep,0,sizeof(int) * (n + 1));
             cin.ignore(1,' ');
             getline(cin,s);
@@ -56,6 +51,7 @@ int main()
                 for(int j = 0;j < tail;j++)
                     krep[q[j]] = q[(j + k) % tail];
             }
+
             string answer;
             answer.resize(n);
             for(int i = 1;i <= n;i++)
