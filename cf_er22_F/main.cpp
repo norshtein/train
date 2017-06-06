@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
-const int N = 500100
-const int M = 500100
+const int N = 500100;
+const int M = 500100;
 struct edge{
     int x,y;
     int st,ed;
