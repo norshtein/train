@@ -34,7 +34,10 @@ void acInsert(const char* s)
 void build()
 {
     queue<int> q;
-    q.push(0);
+    for(int i = 0;i < 26;i++)
+        if(trie[0].ch[i])
+            q.push(trie[0].ch[i]);
+
     int child;
     while(!q.empty())
     {
@@ -46,11 +49,6 @@ void build()
                 continue;
 
             q.push(child);
-            if(!now)
-            {
-                trie[child].fail = 0;
-                continue;
-            }
 
             int pre = trie[now].fail;
             while(pre && !trie[pre].ch[i])
