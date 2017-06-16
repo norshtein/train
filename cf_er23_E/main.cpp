@@ -1,64 +1,76 @@
 #include <bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
-using namespace __gnu_pbds;
 
-int n;
-int answer;
-tree<
-int,
-null_type,
-less<int>,
-rb_tree_tag,
-tree_order_statistics_node_update>
-t;
+const int MAXN = 100000 * 32 + 5;
 
-void dfs(int p,int l,int digit,int pre)
+struct Node{
+    int ch[2];
+    int cnt;
+
+} trie[MAXN];
+int nodeNum = 0;
+
+void trieInsert(int num,int delta)
 {
-    if(digit < 0)
-        return;
-    int mask;
-    for(int choice = 0;choice <= 1;choice++)
+    int now = 0;
+    for(int shift = 30;shift >= 0;shift--)
     {
-        mask = choice ? (1 << digit) : 0;
-        if(((p & mask) ^ mask) < (l & mask))
-        {
-            int high = pre + (mask | (mask - 1));
-            int low = pre + mask;
-            answer += t.order_of_key(high) - t.order_of_key(low);
-            if(*t.find_by_order(t.order_of_key(low)) == low)
-                answer++;
-        }
-        else if(((p & mask) ^ mask) == (l & mask))
-            dfs(p,l,digit - 1,mask + pre);
+        int nowDigit = (num & (1 << shift) ? 1 : 0);
+        if(!trie[now].ch[nowDigit])
+            trie[now].ch[nowDigit] = ++nodeNum;
+        now = trie[now].ch[nowDigit];
+        trie[now].cnt += delta;
+        //cout << num << ' ' << shift << ' ' << now << ' ' << nowDigit << endl;
     }
+}
+int getAnswer(int p,int l)
+{
+    int answer = 0;
+    int now = 0;
+    for(int shift = 30;shift >= 0;shift--)
+    {
+        int pd = p & (1 << shift) ? 1 :0;
+        int ld = l & (1 << shift) ? 1 :0;
+        //cout << pd << ' ' << ld << ' ' << shift << endl;
+        if(pd == 1 && ld == 0)
+            now = trie[now].ch[1];
+        else if(pd == 0 && ld == 1)
+        {
+            answer += trie[trie[now].ch[0]].cnt;
+            now = trie[now].ch[1];
+        }
+        else if(pd == 1 && ld == 1)
+        {
+            answer += trie[trie[now].ch[1]].cnt;
+            now = trie[now].ch[0];
+        }
+        else
+            now = trie[now].ch[0];
+
+        if(trie[now].cnt == 0)
+            break;
+    }
+    return answer;
 }
 
 int main()
 {
+    int n;
     scanf("%d",&n);
     for(int i = 0;i < n;i++)
     {
         int op,p,l;
         scanf("%d",&op);
-        if(op == 1)
+        if(op == 1 || op == 2)
         {
             scanf("%d",&p);
-            t.insert(p);
-        }
-        else if(op == 2)
-        {
-            scanf("%d",&p);
-            t.erase(p);
+            trieInsert(p,op & 1 ? 1 :-1);
         }
         else
         {
             scanf("%d%d",&p,&l);
-            answer = 0;
-            dfs(p,l,30,0);
-            printf("%d\n",answer);
+            printf("%d\n",getAnswer(p,l));
         }
     }
     return 0;
