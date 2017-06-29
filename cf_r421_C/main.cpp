@@ -8,7 +8,8 @@ int main()
     cin >> a >> b >> l >> r;
     int lBlock = (l - 1) / (a + b);
     int rBlock = (r - 1) / (a + b);
-
+    cout << lBlock << ' ' << rBlock << endl;
+    cout << (l - 1) % (a + b) << ' ' << (r - 1) % (a + b) << endl;
     if((l - 1) % (a + b) < a) //ÂäÔÚa ÄÚ
     {
         if(lBlock == rBlock && (r - 1) % (a + b) < a)
@@ -21,6 +22,11 @@ int main()
                 return 0 * printf("%d\n",a + 1);
             else
             {
+                if(a - (l - 1) % (a + b) + (r - 1) % (a + b) + 1 < a)
+                    return 0 * printf("%d\n",a - (l - 1) % (a + b) + (r - 1) % (a + b) + 1);
+                else
+                    return 0 * printf("%d\n",a + 1);
+                /*
                 if((r - 1) % (a + b) < a)
                 {
                     if((r - 1) % (a + b) < a - 1)
@@ -30,6 +36,7 @@ int main()
                 }
                 else
                     return 0 * printf("%d\n",a + 1);
+                    */
             }
         }
     }
