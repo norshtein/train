@@ -3,3 +3,4 @@
 *.depend
 bin/
 obj/
+*.txt
